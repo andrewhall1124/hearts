@@ -1,12 +1,22 @@
+from typing import Self
+
 class Card:
     def __init__(self, suit, value):
-        self.suit = suit
-        self.value = value
+        self._suit: str = suit
+        self._value: str = value
+
+    @property
+    def suit(self) -> str:
+        return self._suit
+    
+    @property
+    def value(self) -> str:
+        return self._value
 
     def __repr__(self):
-        return f"{self.value}{self.suit}"
+        return f"{self._value}{self._suit}"
 
-    def get_numeric_value(self):
+    def _get_numeric_value(self):
         """Convert card value to numeric for comparison"""
         values = {
             "2": 2,
@@ -23,41 +33,13 @@ class Card:
             "K": 13,
             "A": 14,
         }
-        return values.get(self.value, 0)
+        return values.get(self._value, 0)
 
-    def __eq__(self, other):
-        """Equal to comparison"""
-        if not isinstance(other, Card):
-            return NotImplemented
+    def __eq__(self, other: 'Self'):
         return (
-            self.get_numeric_value() == other.get_numeric_value()
-            and self.suit == other.suit
+            self._get_numeric_value() == other._get_numeric_value()
+            and self._suit == other._suit
         )
 
-    def __lt__(self, other):
-        """Less than comparison"""
-        if not isinstance(other, Card):
-            return NotImplemented
-        if self.get_numeric_value() == other.get_numeric_value():
-            # If values are equal, compare suits (optional, define your own suit hierarchy)
-            suits_order = {"♠": 3, "♥": 2, "♦": 1, "♣": 0}
-            return suits_order.get(self.suit, 0) < suits_order.get(other.suit, 0)
-        return self.get_numeric_value() < other.get_numeric_value()
-
-    def __gt__(self, other):
-        """Greater than comparison"""
-        if not isinstance(other, Card):
-            return NotImplemented
-        return other < self
-
-    def __le__(self, other):
-        """Less than or equal to comparison"""
-        if not isinstance(other, Card):
-            return NotImplemented
-        return self < other or self == other
-
-    def __ge__(self, other):
-        """Greater than or equal to comparison"""
-        if not isinstance(other, Card):
-            return NotImplemented
-        return self > other or self == other
+    def __lt__(self, other: 'Self'):
+        return self._get_numeric_value() < other._get_numeric_value()
