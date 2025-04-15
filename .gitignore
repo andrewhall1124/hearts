@@ -13,4 +13,4 @@ wheels/
 /.archive
 
 # Logs
-# /logs
+/logs
