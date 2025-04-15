@@ -5,7 +5,6 @@ import numpy as np
 import polars as pl
 import random
 import string
-from rich import print
 import os
 
 DECK = Deck().cards
@@ -73,9 +72,6 @@ class GameLogger:
 
         state_df = self.convert_state_to_df(state)
         self.logs = pl.concat([self.logs, state_df])
-
-        if self.print_logs:
-            print(f"Player {player.name} played {card}")
 
     def save_logs(self) -> None:
         os.makedirs("logs", exist_ok=True)

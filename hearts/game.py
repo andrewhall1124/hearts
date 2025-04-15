@@ -9,10 +9,12 @@ class Game:
         self,
         players: list[Player],
         max_points: int = 100,
+        print_scores: bool = True,
         logger: GameLogger | None = None,
     ) -> None:
         self.players = players
         self.max_points = max_points
+        self.print_scores = print_scores
         self.deck = Deck()
         self.lead_player_index = 0
         self.scores = [0] * 4
@@ -46,6 +48,12 @@ class Game:
                 score + round_score
                 for score, round_score in zip(self.scores, self.round_scores)
             ]
+        # Print game scores
+        if self.print_scores:
+            print("-" * 5 + " Scores " + "-" * 5)
+            for score, player in zip(self.scores, self.players):
+                print(f"{player}: {score}")
+            print()
 
     def play_trick(self) -> None:
         trick: list[Card] = []

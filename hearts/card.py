@@ -44,3 +44,6 @@ class Card:
 
     def __lt__(self, other: "Self"):
         return self._get_numeric_value() < other._get_numeric_value()
+    
+    def __hash__(self):
+        return hash((self.suit, self.value))

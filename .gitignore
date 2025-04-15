@@ -14,3 +14,7 @@ wheels/
 
 # Logs
 /logs
+
+# Data
+*.parquet
+*.pkl

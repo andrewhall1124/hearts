@@ -1,0 +1,13 @@
+name: Simple vs Random
+seed: 1
+players:
+  - type: random
+    name: Random 1
+  - type: random
+    name: Random 2
+  - type: simple
+    name: Simple 1
+  - type: sklearn
+    name: SKLearn 1
+games: 4
+max_points: 100
