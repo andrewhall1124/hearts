@@ -1,5 +1,5 @@
 import random
-from card import Card
+from hearts.card import Card
 from typing import Self
 
 

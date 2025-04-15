@@ -1,0 +1,13 @@
+name: Simple vs Random
+seed: 1
+players:
+  - type: simple
+    name: Simple 1
+  - type: random
+    name: Random 1
+  - type: random
+    name: Random 2
+  - type: random
+    name: Random 3
+games: 10
+max_points: 100

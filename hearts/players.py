@@ -1,4 +1,4 @@
-from card import Card
+from hearts.card import Card
 from abc import ABC, abstractmethod
 import random
 
@@ -37,9 +37,6 @@ class Player(ABC):
         pass
 
 class RandomPlayer(Player):
-    def __init__(self, name: str, seed: int):
-        super().__init__(name)
-        random.seed(seed)
 
     def play_card(self, trick: list[Card]) -> Card:
         valid_cards = self.get_valid_cards(trick)

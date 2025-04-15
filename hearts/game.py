@@ -1,6 +1,6 @@
-from players import Player
-from deck import Deck
-from card import Card
+from hearts.players import Player
+from hearts.deck import Deck
+from hearts.card import Card
 
 
 class Game:
@@ -12,14 +12,15 @@ class Game:
         self.scores = [0] * 4
         self.round_scores = [0] * 4
 
+    @property
     def game_over(self) -> bool:
         for score in self.scores:
             if score >= self.max_points:
                 return True
 
-    def play(self) -> None:
+    def play(self, log: bool = False) -> None:
         # Play rounds
-        while not self.game_over():
+        while not self.game_over:
             # Reset round scores
             self.round_scores = [0] * 4
 
@@ -28,19 +29,11 @@ class Game:
             self.deck.shuffle()
             for player in self.players:
                 player.hand = self.deck.deal(13)
+
             # Play tricks
             for i in range(13):
                 self.play_trick()
             self.scores = [score + round_score for score, round_score in zip(self.scores, self.round_scores)]
-            print("-" * 5 + " Scores " + "-" * 5)
-            for i, player in enumerate(self.players):
-                print(f"{player}: {self.scores[i]}")
-            print()
-        
-        winners = sorted(zip(self.players, self.scores), key=lambda x: x[1])
-        print("-" * 5 + " Results " + "-" * 5)
-        for i, player in enumerate(winners):
-            print(f"({i + 1}) {player[0]}: {player[1]}")
 
     def play_trick(self) -> None:
         trick: list[Card] = []
@@ -50,7 +43,6 @@ class Game:
             player = self.players[player_index]
 
             card = player.play_card(trick)
-            print(f"{player} played {card}")
 
             trick.append(card)
 
@@ -71,8 +63,4 @@ class Game:
         winning_player_index = (self.lead_player_index + max_card_index) % 4
         self.lead_player_index = winning_player_index
         
-        winning_player = self.players[winning_player_index]
-        print(f"{winning_player} won the trick!")
-
         self.round_scores[winning_player_index] += hearts
-        print(f"Round Scores: {self.round_scores}\n")
