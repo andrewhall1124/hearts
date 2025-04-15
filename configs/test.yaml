@@ -9,5 +9,5 @@ players:
     name: Random 3
   - type: random
     name: Random 4
-games: 1
-max_points: 13
+games: 10
+max_points: 100

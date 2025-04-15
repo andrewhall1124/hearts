@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
         for i in range(config.games):
             logger = GameLogger(
-                print_logs=True
+                print_logs=False
             )
             game = Game(
                 players=players,

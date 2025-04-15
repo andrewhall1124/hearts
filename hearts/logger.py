@@ -78,5 +78,5 @@ class GameLogger:
             print(f"Player {player.name} played {card}")
 
     def save_logs(self) -> None:
-        os.makedirs("logs")
+        os.makedirs("logs", exist_ok=True)
         self.logs.write_parquet(f"logs/{self.game_id}.parquet")
