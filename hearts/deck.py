@@ -49,13 +49,13 @@ class Deck:
             dealt_cards.append(self._cards.pop())
 
         return dealt_cards
-    
+
     @property
     def cards(self) -> list[Card]:
         return self._cards
 
     def __len__(self):
         return len(self._cards)
-    
+
     def __repr__(self):
         return str(self._cards)

@@ -15,10 +15,11 @@ def create_player(type: str, name: str) -> Player:
 
         case "random":
             return RandomPlayer(name)
-        
+
         case _:
             raise NotImplementedError(f"{type} player is not implemented.")
-        
+
+
 @dataclass
 class ExperimentConfig:
     name: str
@@ -40,23 +41,12 @@ if __name__ == "__main__":
 
         random.seed(config.seed)
 
-        players = [
-            create_player(**player_config) for player_config in config.players
-        ]
-
+        players = [create_player(**player_config) for player_config in config.players]
 
         for i in range(config.games):
-            logger = GameLogger(
-                print_logs=False
-            )
-            game = Game(
-                players=players,
-                max_points=config.max_points,
-                logger=logger
-            )
+            logger = GameLogger(print_logs=False)
+            game = Game(players=players, max_points=config.max_points, logger=logger)
             game.play()
 
             print(logger.logs)
             logger.save_logs()
-
-    

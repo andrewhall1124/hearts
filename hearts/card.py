@@ -1,5 +1,6 @@
 from typing import Self
 
+
 class Card:
     def __init__(self, suit, value):
         self._suit: str = suit
@@ -8,7 +9,7 @@ class Card:
     @property
     def suit(self) -> str:
         return self._suit
-    
+
     @property
     def value(self) -> str:
         return self._value
@@ -35,11 +36,11 @@ class Card:
         }
         return values.get(self._value, 0)
 
-    def __eq__(self, other: 'Self'):
+    def __eq__(self, other: "Self"):
         return (
             self._get_numeric_value() == other._get_numeric_value()
             and self._suit == other._suit
         )
 
-    def __lt__(self, other: 'Self'):
+    def __lt__(self, other: "Self"):
         return self._get_numeric_value() < other._get_numeric_value()
