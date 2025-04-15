@@ -1,7 +1,9 @@
 import argparse
 import yaml
 from rich import print
-from hearts import Game, Player, SimplePlayer, RandomPlayer
+from hearts.game import Game
+from hearts.players import Player, SimplePlayer, RandomPlayer
+from hearts.logger import GameLogger
 from dataclasses import dataclass
 import random
 
@@ -42,9 +44,19 @@ if __name__ == "__main__":
             create_player(**player_config) for player_config in config.players
         ]
 
+
         for i in range(config.games):
+            logger = GameLogger(
+                print_logs=True
+            )
             game = Game(
                 players=players,
-                max_points=config.max_points
+                max_points=config.max_points,
+                logger=logger
             )
             game.play()
+
+            print(logger.logs)
+            logger.save_logs()
+
+    

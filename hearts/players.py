@@ -4,11 +4,15 @@ import random
 
 class Player(ABC):
     def __init__(self, name: str) -> None:
-        self.name = name
+        self._name = name
         self._hand: list[Card] = []
 
     def __repr__(self):
         return self.name
+    
+    @property
+    def name(self) -> str:
+        return self._name
 
     @property
     def hand(self) -> list[Card]:
