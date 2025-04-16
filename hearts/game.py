@@ -1,7 +1,6 @@
 from hearts.players import Player
 from hearts.deck import Deck
 from hearts.card import Card
-from hearts.logger import GameLogger
 
 
 class Game:
@@ -10,7 +9,6 @@ class Game:
         players: list[Player],
         max_points: int = 100,
         print_scores: bool = True,
-        logger: GameLogger | None = None,
     ) -> None:
         self.players = players
         self.max_points = max_points
@@ -19,7 +17,6 @@ class Game:
         self.lead_player_index = 0
         self.scores = [0] * 4
         self.round_scores = [0] * 4
-        self.logger = logger
         self.played_cards: list[Card] = []
 
     @property
@@ -28,7 +25,7 @@ class Game:
             if score >= self.max_points:
                 return True
 
-    def play(self) -> None:
+    def play(self) -> dict:
         # Play rounds
         while not self.game_over:
             # Reset round scores
@@ -48,12 +45,11 @@ class Game:
                 score + round_score
                 for score, round_score in zip(self.scores, self.round_scores)
             ]
-        # Print game scores
-        if self.print_scores:
-            print("-" * 5 + " Scores " + "-" * 5)
-            for score, player in zip(self.scores, self.players):
-                print(f"{player}: {score}")
-            print()
+
+        return [
+            {"player": player.name, "score": score}
+            for player, score in zip(self.players, self.scores)
+        ]
 
     def play_trick(self) -> None:
         trick: list[Card] = []
@@ -62,22 +58,7 @@ class Game:
             player_index = (self.lead_player_index + i) % 4
             player = self.players[player_index]
 
-            player_hand = player.hand.copy()
-            valid_cards = player.get_valid_cards(trick).copy()
             card = player.play_card(trick)
-
-            if self.logger is not None:
-                self.logger.log_game_state(
-                    player=player,
-                    player_index=player_index,
-                    hand=player_hand,
-                    valid_cards=valid_cards,
-                    card=card,
-                    trick=trick,
-                    played_cards=self.played_cards,
-                    score=self.scores,
-                    round_score=self.round_scores,
-                )
 
             trick.append(card)
             self.played_cards.append(card)

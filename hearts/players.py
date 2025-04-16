@@ -1,21 +1,6 @@
 from hearts.card import Card
 from abc import ABC, abstractmethod
 import random
-from sklearn.base import BaseEstimator
-import numpy as np
-import joblib
-import pandas as pd
-
-SUITS = ["♣", "♦", "♠", "♥"]
-RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
-
-CARD_TO_INDEX = {
-    Card(suit, rank): i + 1 for i, (suit, rank) in enumerate(
-        (s, r) for s in SUITS for r in RANKS
-    )
-}
-
-INDEX_TO_CARD = {v: k for k, v in CARD_TO_INDEX.items()}
 
 
 class Player(ABC):
@@ -113,56 +98,3 @@ class SimplePlayer(Player):
 
         self.hand.remove(card)
         return card
-    
-class SklearnPlayer(Player):
-    def __init__(self, name: str) -> None:
-        super().__init__(name)
-        self.model: BaseEstimator = joblib.load('random_forest.pkl')
-        self.played_cards_history: list[Card] = []
-
-    def play_card(self, trick: list[Card]) -> Card:
-        valid_cards = self.get_valid_cards(trick)
-
-        # Build feature DataFrame
-        x = self._build_features(trick, valid_cards)
-        
-        # Predict card
-        probs = self.model.predict_proba(x)[0]
-        card_idx = int(np.argmax(probs)) + 1  # 1-indexed
-
-        predicted_card = INDEX_TO_CARD.get(card_idx)
-
-        # Fallback if predicted card not valid
-        if predicted_card not in valid_cards:
-            predicted_card = random.choice(valid_cards)
-
-        self._hand.remove(predicted_card)
-        self.played_cards_history.extend(trick + [predicted_card])
-        return predicted_card
-
-    def _build_features(self, trick: list[Card], valid_cards: list[Card]) -> pd.DataFrame:
-        feature = {}
-        features = [
-            f"{type_}_{i}"
-            for type_ in ['played_cards', 'hand', 'trick', 'valid_cards']
-            for i in range(1, 53)
-        ]
-
-        # played_cards_1 to _52
-        played = set(self.played_cards_history + trick)
-        for i in range(1, 53):
-            feature[f"played_cards_{i}"] = int(INDEX_TO_CARD[i] in played)
-
-        # hand_1 to _52
-        for i in range(1, 53):
-            feature[f"hand_{i}"] = int(INDEX_TO_CARD[i] in self._hand)
-
-        # trick_1 to _52
-        for i in range(1, 53):
-            feature[f"trick_{i}"] = int(INDEX_TO_CARD[i] in trick)
-
-        # valid_cards_1 to _52
-        for i in range(1, 53):
-            feature[f"valid_cards_{i}"] = int(INDEX_TO_CARD[i] in valid_cards)
-
-        return pd.DataFrame([feature], columns=features)

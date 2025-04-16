@@ -2,10 +2,11 @@ import argparse
 import yaml
 from rich import print
 from hearts.game import Game
-from hearts.players import Player, SimplePlayer, RandomPlayer, SklearnPlayer
-from hearts.logger import GameLogger
+from hearts.players import Player, SimplePlayer, RandomPlayer
 from dataclasses import dataclass
 import random
+import polars as pl
+import os
 
 
 def create_player(type: str, name: str) -> Player:
@@ -15,9 +16,6 @@ def create_player(type: str, name: str) -> Player:
 
         case "random":
             return RandomPlayer(name)
-        
-        case "sklearn":
-            return SklearnPlayer(name)
 
         case _:
             raise NotImplementedError(f"{type} player is not implemented.")
@@ -31,6 +29,19 @@ class ExperimentConfig:
     games: int
     max_points: int
 
+@dataclass
+class Results:
+    game_name: str
+    player_scores: list[dict]
+
+    def __repr__(self) -> str:
+        results_str ="\n" +  "-"* 5 + f" {self.game_name} " + "-" * 5
+        for player_score in self.player_scores:
+            player = player_score['player']
+            score = player_score['score']
+            results_str += f"\n{player}: {score}"
+
+        return results_str
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Experiment executor")
@@ -46,11 +57,31 @@ if __name__ == "__main__":
 
         players = [create_player(**player_config) for player_config in config.players]
 
+        results_list = []
         for i in range(config.games):
-            logger = None # GameLogger(print_logs=True)
-            game = Game(players=players, max_points=config.max_points, logger=logger, print_scores=True)
-            game.play()
+            game_name = f"{config.name} {i + 1}"
+            game = Game(players=players, max_points=config.max_points, print_scores=True)
 
-            if logger is not None:
-                print(logger.logs)
-                logger.save_logs()
+            results = Results(
+                game_name=game_name,
+                player_scores=game.play()
+            )
+            print(results)
+
+            results_list.append(results)
+
+        results_dicts = [
+            {
+                "game_name": results.game_name,
+                **player_score
+            }
+            for results in results_list
+            for player_score in results.player_scores
+        ]
+        
+        df = pl.from_dicts(results_dicts)
+
+        
+        os.makedirs("results", exist_ok=True)
+        df.write_parquet(f"results/{game_name.lower().replace(' ', '_')}.parquet")
+            
