@@ -1,4 +1,4 @@
-name: Test
+name: Sluffing vs Random
 seed: 1
 players:
   - type: random
@@ -7,7 +7,7 @@ players:
     name: Random 2
   - type: random
     name: Random 3
-  - type: random
-    name: Random 4
+  - type: sluffing
+    name: Sluffing 1
 games: 10
 max_points: 100

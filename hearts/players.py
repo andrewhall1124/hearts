@@ -48,8 +48,57 @@ class RandomPlayer(Player):
         return random_card
 
 
-class SimplePlayer(Player):
-    """Play the minimum card of the lead suit. Play the max card of the non-lead suit."""
+class MinCardPlayer(Player):
+    """Always play the minimum card in the hand."""
+
+    def play_card(self, trick: list[Card]) -> Card:
+        valid_cards = self.get_valid_cards(trick)
+
+        card = min(valid_cards)
+
+        self.hand.remove(card)
+        return card
+
+
+class MinMaxCardPlayer(Player):
+    """Player that plays the min lead suit card or the max non-lead suit card."""
+
+    def play_card(self, trick: list[Card]) -> Card:
+        valid_cards = self.get_valid_cards(trick)
+
+        # If first player
+        if len(trick) == 0:
+            card = min(valid_cards)
+
+        # Not first player
+        else:
+            lead_suit = trick[0].suit
+
+            # If no lead suit cards
+            if lead_suit != valid_cards[0].suit:
+                card = max(valid_cards)
+
+            # Lead suit cards
+            else:
+                card = min(valid_cards)
+
+        self.hand.remove(card)
+        return card
+
+
+class SluffingPlayer(Player):
+    """Player that sluffs cards rationally.
+
+    ----- Decision Tree -----
+    Leading: play min card.
+    Following:
+        Void Suit:
+            Hearts: play max heart
+            Void Hearts: play max card
+        Non-Void Suit:
+            Losing Cards: play max losing card
+            Winning Cards: play min winning card
+    """
 
     @staticmethod
     def _get_hearts(cards: list[Card]) -> list[Card]:

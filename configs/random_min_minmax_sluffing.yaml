@@ -1,0 +1,13 @@
+name: Random vs Min vs MinMax vs Sluffing
+seed: 1
+players:
+  - type: random
+    name: Random
+  - type: min
+    name: MinCard
+  - type: minmax
+    name: MinMaxCard
+  - type: sluffing
+    name: Sluffing
+games: 100
+max_points: 100
