@@ -1,0 +1,13 @@
+name: MCTS vs Random
+seed: 1
+players:
+  - type: random
+    name: Random 1
+  - type: random
+    name: Random 2
+  - type: random
+    name: Random 3
+  - type: mcts
+    name: MCTS 1
+games: 10
+max_points: 100

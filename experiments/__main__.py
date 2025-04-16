@@ -2,7 +2,7 @@ import argparse
 import yaml
 from rich import print
 from hearts.game import Game
-from hearts.players import Player, SluffingPlayer, RandomPlayer, MinCardPlayer, MinMaxCardPlayer
+from hearts.players import Player, SluffingPlayer, RandomPlayer, MinCardPlayer, MinMaxCardPlayer, MCTSPlayer
 from dataclasses import dataclass
 import random
 import polars as pl
@@ -22,6 +22,9 @@ def create_player(type: str, name: str) -> Player:
         
         case "minmax":
             return MinMaxCardPlayer(name)
+        
+        case "mcts":
+            return MCTSPlayer(name)
 
         case _:
             raise NotImplementedError(f"{type} player is not implemented.")

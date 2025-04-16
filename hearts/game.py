@@ -62,6 +62,7 @@ class Game:
 
             trick.append(card)
             self.played_cards.append(card)
+            print(f"{player} played {card}")
 
             if card._suit == "♥":
                 hearts += 1
