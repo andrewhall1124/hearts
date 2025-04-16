@@ -1,6 +1,7 @@
 from hearts.players import Player
 from hearts.deck import Deck
 from hearts.card import Card
+from rich import print
 
 
 class Game:
@@ -40,6 +41,7 @@ class Game:
 
             # Play tricks
             for i in range(13):
+                print("\n" + "-" * 5 + f" Trick {i + 1} " + "-" * 5)
                 self.play_trick()
             self.scores = [
                 score + round_score

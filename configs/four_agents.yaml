@@ -1,0 +1,13 @@
+name: Four Agents
+seed: 1
+players:
+  - type: min
+    name: MinCard 1
+  - type: minmax
+    name: MinMaxCard 1
+  - type: sluffing
+    name: Sluffing 1
+  - type: mcts
+    name: MCTS 1
+games: 10
+max_points: 100
